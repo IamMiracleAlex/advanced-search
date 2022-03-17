@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: fake_password
+      POSTGRES_DB: logger
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  log_service:
+    build: .
+    environment:
+      - PYTHONUNBUFFERED=1    
+    depends_on:
+      - db
+    ports:
+      - "5000:5000"
+    volumes:
+      - '.:/app'
+      
+volumes:
+  postgres-data:
